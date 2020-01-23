@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    background: #fff;   
+}
+.wrapper {
+    width: 1100px;
+    height: 100vh;
+    margin: auto;
+}
+header {
+    height: 100px;
+    margin: 0 30px 75px 30px;
+    display: flex;
+    font-family: 'Marvel', sans-serif;
+    justify-content: space-between;
+    border-bottom: 2px solid #f0f0f0; 
+}
+.intent {
+    line-height: 100px;
+    height: 100%;
+    font-size: 2em;
+    letter-spacing: 2px;
+    font-weight: 100;
+}
+ul {
+    display: flex;
+    list-style-type: none;
+    line-height: 100px;
+    margin: 0;
+    font-size: 1.1em;
+    letter-spacing: 2px;
+    font-weight: 500;
+    padding: 0;
+}
+li {
+    margin-left: 30px;    
+}
+li:first-child {
+    margin: 0;
+}
+.main {
+    margin-bottom: 20px;
+}
+section {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 30px 60px 30px;
+}
+/*
+.reverse{
+    flex-direction: row-reverse;
+}
+*/
+.text {
+    width: 400px;
+}
+section > img {
+    width: 600px;
+    height: 300px;
+}
+footer {
+    height: 100px;
+/*    background: red;*/
+    border-top: 2px solid #f0f0f0;
+}
