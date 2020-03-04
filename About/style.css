@@ -1,0 +1,141 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+.wrapper {
+    width: 1000px;
+    height: 100vh;
+    background: red;
+    margin: auto;
+}
+header {
+    height: 50px;
+    background: #999;
+    display: flex;
+    font-family: 'Marvel', sans-serif;
+    font-weight: bold;
+}
+/*
+.empty {
+    width: 60%;
+    height: 100%;;
+}
+*/
+ul {
+    list-style-type: none;
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    margin-right: 50px;
+}
+li {
+        width: 100px;
+        background: #999;
+        padding: 0 10px;
+}
+a {
+    text-decoration: none;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;     
+        box-sizing: border-box;
+}
+li:hover {
+    background: #000;
+}
+main {
+    background: #fff;
+    text-align: center;
+}
+.text {
+    margin: auto;
+    width: 90%;
+    padding: 20px 0;
+}
+.faq {
+        margin: auto;
+    width: 100%;
+    background-color: #eee;
+}
+.text p {
+    text-align: justify;
+    margin: 0;
+}
+.accordion:after {
+  content: '↓';
+  font-size: 13px;
+  color: #000;
+font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "↑"; 
+}
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+    padding-left: 50px;
+}
+
+.active, .accordion:hover {
+  background-color: #999;
+}
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 300ms ease-out;
+}
+footer {
+    text-align: center;
+    background: #999;
+}
+.form {
+    padding: 20px 0;
+    background: #999;
+    width: 90%;
+    margin: auto;
+}
+form {
+    width: 400px;
+    margin: auto;  
+    margin-bottom: 50px;
+}
+form input {
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+}
+form textarea {
+    width: 300px;
+    border-radius: 10px;
+}
+form p:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+input[type="submit"] {
+    width: 40px;
+    border-radius: 5px;
+    margin-right: 50px;
+    background: #777;
+}
