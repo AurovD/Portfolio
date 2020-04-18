@@ -1,0 +1,19 @@
+extends layout
+block content
+    .bg.table
+        // TODO delete account
+    .content
+        .tasks
+            .profMenu
+                a.profMenu__but(href="/tasks") Tasks
+                button.profMenu__but.delUser Delete account
+            h2.tasks_h2 Мои задачи
+            h3.tasks_h3 Текущие
+            .openTasks
+            h3.tasks_h3 Готовые
+            .completeTasks
+            h3.tasks_h3 Мои подчиненые
+            .peopleList
+    script(src="/js/getOwnTasks.js")
+    script(src="/js/getPeople.js")
+    script(src="/js/changeTask.js")

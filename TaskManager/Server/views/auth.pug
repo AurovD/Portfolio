@@ -1,0 +1,9 @@
+extends layout
+block content
+    .content
+        h1 Войти в личный кабинет
+        form.userForm(action="/api/logIn" method="POST")
+            input(type="text" placeholder="login" name="login" required)
+            input(type="password" placeholder="Password" name="password" required)
+            button(type="submit") Войти в личный кабинет
+    script(src="js/auth.js")
