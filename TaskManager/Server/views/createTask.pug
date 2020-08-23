@@ -1,0 +1,29 @@
+extends layout
+block content
+    .content
+        h1 Добавить задачи
+        form(action="/api/tasks/create" method="POST")
+            table.newTask
+                tr
+                    td Для кого задача?
+                    td
+                        select(name="executor")
+                            option(value="true") Для себя
+                            option(value="null") Для всех
+                tr
+                    td Задача
+                    td
+                        textarea(name="text" required)
+                tr
+                    //TODO: Предусмотреть установку дня и времени относительно времени создания задачи
+                    td Срок исполнения
+                    td
+                        input(type="date" name="date")
+                        input(type="time" name="time")
+                tr
+                    td
+                    td
+                        input(type="hidden" name="status" value="open")
+                        input(type="submit" value="Создать задачу")
+        .textAlert
+        script(src="/js/addTask.js")
