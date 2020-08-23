@@ -1,0 +1,139 @@
+<h1>Личный кабинет</h1>
+<div class="profileItem">
+    Привет {{user.name}}
+    <a href="/logout">Выйти</a>
+</div>
+<script>
+    let lastUser = JSON.parse(localStorage.getItem("user"));
+    let u = {
+        name: "{{user.name}}",
+        user: "{{user.user}}",
+        group: "{{user.group}}"
+    };
+    if(!lastUser || lastUser.user !== u.user) {
+        localStorage.setItem("user", JSON.stringify(u));
+        localStorage.removeItem("order");
+    }
+
+    (async() => {
+        try {
+            let res = await fetch("/api/user/getBasket", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                "Content-Type": "application/json"
+                }
+            });
+            let data = await res.json();
+            let item = document.querySelectorAll(".profileItem")[0];
+            for(let i = 0; i < data.list.length; i++){
+                let book = document.createElement("p");
+                book.innerText = data.list[i].title;
+                item.appendChild(book);
+            }
+            if(data.basket.length) {
+                let cntEl = document.querySelector(".cart .count");
+                let n = 0;
+                data.basket.forEach(d => {
+                   n += +d.cnt;
+                });
+                cntEl.textContent = n;
+                localStorage.setItem("order", JSON.stringify(data.basket));
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    })();
+    function testAdmin(group) {
+        if(group === "Администратор") {
+            let cont = document.querySelector(".profileItem");
+            let mainContainer = cont.parentElement;
+            let list = document.createElement("ul");
+            list.className = "adminMenu";
+            let info = ["Профиль", "Товары", "Пользователи"];
+
+            for(let i = 0; i < info.length; i++) {
+                let item = document.createElement("li");
+                item.innerText = info[i];
+                list.appendChild(item);
+                if(i !== 0){
+                    let copy = cont.cloneNode(false);
+                    mainContainer.appendChild(copy);
+                }
+            }
+            mainContainer.insertBefore(list, cont);
+            let links = document.querySelectorAll(".adminMenu > li");
+            let blocks = document.querySelectorAll(".profileItem");
+            for (let i = 0; i < links.length; i++) {
+                links[i].addEventListener("click", () => {
+                   if(!links[i].classList.contains("active")) {
+                       links[i].classList.add("active");
+                       blocks[i].classList.add("active");
+                   }
+                   for(let j = 0; j < links.length; j++){
+                        if(i !== j) {
+                            if(links[j].classList.contains("active")) {
+                                links[j].classList.remove("active");
+                                blocks[j].classList.remove("active");
+                            }
+                        }
+                   }
+                });
+                if(info[i] === "Товары") {
+                    getProducts(blocks[i]);
+                } else if(info[i] === "Пользователи") {
+                    getUsers(blocks[i]);
+                }
+            }
+        } else {
+            let blocks = document.querySelectorAll(".profileItem");
+            blocks[0].style.display = "block";
+        }
+    };
+    const getProducts = async (el) => {
+        try {
+            const res = await fetch("/api/getProducts", {
+                method: "get",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+            let data = await res.json();
+            for(let i = 0; i < data.info.length; i++) {
+                let div = document.createElement("div");
+                div.className = "productRow";
+                div.innerText = data.info[i].title;
+                el.appendChild(div);
+            }
+        } catch(err) {
+            throw  new Error(err);
+        }
+    };
+    const getUsers = async (el) => {
+        try {
+            const res = await fetch("/api/users", {
+                method: "get",
+                headers: {
+                    "Accept": "application/json",
+                }
+            });
+            let data = await res.json();
+            let arr = ["name", "tel", "email", "group", "orders", "address", "_id"];
+            if(data.info && data.info.length) {
+                for (let i = 0; i < data.info.length; i++) {
+                    let row = document.createElement("div");
+                    row.className = "userRow";
+                    for (let j = 0, cnt = arr.length; j < cnt; j++) {
+                        let cell = document.createElement("div");
+                        cell.innerText = data.info[i][arr[j]];
+                        row.appendChild(cell);
+                    }
+                    el.appendChild(row);
+                }
+            }
+        } catch(err) {
+            throw  new Error(err);
+        }
+    };
+    testAdmin("{{user.group}}");
+</script>

@@ -1,0 +1,171 @@
+*
+  padding 0
+  margin 0
+body
+  margin 0
+  font 30px sans-serif
+  color #999
+  background #dedede
+a
+  color inherit
+  text-decoration none
+.wrapper
+  width 100vw
+  height 100vh
+  overflow-x hidden
+  display grid
+  grid-template-columns 250px calc(100vw - 250px)
+  grid-template-rows 100px auto 50px
+header
+footer
+  display flex
+  align-items center
+  justify-content space-between
+  grid-column 1 / 3
+  color #000
+  background-color #fff
+  padding 5px 100px 0 30px
+  img
+    width 50px
+  .cart
+    display block
+    position relative
+    //&::after
+    //  position absolute
+    //  content "1"
+    //  top -10px
+    //  left 30px
+    //  text-align center
+    //  line-height 30px
+    //  width 30px
+    //  height 30px
+    //  font-size 14px
+    //  border 1px solid
+    //  border-radius 50%
+    .count
+      position absolute
+      top -10px
+      left 30px
+      text-align center
+      line-height 35px
+      width 30px
+      height 30px
+      font-size 14px
+      color #fff
+      background-color blue
+      border-radius 50%
+main
+  background-color #fff
+  color #000
+  box-sizing border-box
+.main__bgIndex
+  color #000
+  box-sizing border-box
+.main_list
+  margin 0 auto
+  display flex
+  flex-wrap wrap
+  width 1210px
+  box-sizing border-box
+.index_container
+  width 1200px
+  height 100%
+  background-color red
+  color #000
+  box-sizing border-box
+.catalogList
+  cursor pointer
+  width 300px
+  height 300px
+  background-color #888
+  margin-bottom 2px
+  margin-right 2px
+  //font-size 20px
+  position relative
+  background-repeat no-repeat
+  background-size cover
+.box
+  position absolute
+  width 100%
+  height 100%
+  background-color #0007
+  display flex
+  justify-content center
+  align-items center
+  color #fff
+  text-align center
+.engPoem
+  background-image url("/img/bg/english.jpg")
+.detective
+  background-image url("/img/bg/detective.jpeg")
+.foreign
+  background-image url("/img/bg/foreign.jpg")
+.web
+  background-image url("/img/bg/web.jpg")
+.rel
+  background-image url("/img/bg/rel.jpg")
+.love
+  background-image url("/img/bg/lovelove.jpg")
+.scaz
+  background-image url("/img/bg/scaz.png")
+.pop
+  background-image url("/img/bg/pop.jpg")
+.fan
+  background-image url("/img/bg/fantasy.jpg")
+.rus
+  background-image url("/img/bg/rus.jpg")
+.psy
+  background-image url("/img/bg/freud.jpg")
+  background-position-x -50px
+.des
+  background-image url("/img/bg/des.jpg")
+nav
+  background: #fff
+  color #000
+  background-image url("/img/bg/nav3.png")
+  background-repeat no-repeat
+  background-position-x left
+  background-position-y bottom
+  background-size 60%
+  text-align center
+  padding-top 30px;
+.navigation 
+  h3
+    color #000
+    margin 30px
+.navigation_list 
+  li
+    margin-bottom 20px
+.error
+  display flex
+  width 100%
+  height 100%
+  color #5c0002
+  justify-content center
+  align-items center
+  font-size 200px
+.form
+  display flex
+  flex-direction column
+  width 300px
+  input
+    margin-bottom 20px
+    width 300px
+    height 50px
+    padding-left 30px
+    box-sizing border-box
+    border-radius 30px
+    border 1px solid #000
+  input[type="submit"]
+    padding 0
+    border none
+    background-color rgb(123, 217, 200)
+img
+  width 150px
+
+@import "./css/product.styl"
+@import "./css/user.styl"
+@import "./css/busket.styl"
+@import "./css/category.styl"
+@import "./css/add.styl"
+

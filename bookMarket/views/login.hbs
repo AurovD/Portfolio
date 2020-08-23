@@ -1,0 +1,83 @@
+<div class="wrapperLogin">
+    <div class="headContainer logCont">
+        <h2 class="logHead active">Войти в личный кабинет</h2>
+        <h2 class="logHead">Регистрация нового пользователя</h2>
+    </div>
+    <div class="login-container">
+        <ul class="form-nav">
+            <li class="userAction">Вход</li>
+            <li class="userAction">Регистрация</li>
+        </ul>
+        <!--реализовать AJAX отправка формы есть л такой user-->
+        <div class="form-container">
+            <form action="/api/user" method="POST" id="login" class="form">
+                <input type="email" name="email" placeholder="Ваш email" required>
+                <input type="password" name="password" placeholder="Ваш пароль" required>
+                <input type="submit" value="Войти">
+            </form>
+        </div>
+        <div class="form-container">
+            <form action="/api/addUser" method="post" id="reg" class="form">
+                <input type="text" name="name" placeholder="Ваше имя" required>
+                <input type="email" name="email" placeholder="Ваш email" required>
+                <input type="tel" name="tel" placeholder="+7 (000) " required>
+                <input type="password" name="password" placeholder="Ваш пароль" required>
+                <input type="password" placeholder="Повторите пароль" required>
+                <input type="submit" value="Войти">
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    // let form = document.forms;
+    // console.log(form);
+    // const u = async (form, body) => {
+    //     try {
+    //         const res = await fetch(form.action, {
+    //             method: form.method,
+    //             headers: {
+    //                 "Accept": "application/json",
+    //                 "Content-Type": "application/json"
+    //             },
+    //             body: JSON.stringify(body)
+    //         });
+    //     } catch (err) {
+    //         throw new Error(err);
+    //     }
+    // };
+    // for(let i = 0; i < form.length; i++) {
+    //     let body = {};
+    //     form[i].addEventListener("submit", async (e) => {
+    //         e.preventDefault();
+    //         for (let j = 0; j < form[i].elements.length; j++) {
+    //             const el = form[i].elements[j];
+    //             body[el.name] = el.value;
+    //         }
+    //         console.log(body);
+    //         u(form[i], body);
+    //     });
+    // }
+    let links = document.querySelectorAll(".userAction");
+    let blocks = document.querySelectorAll(".form-container");
+    let logHead = document.querySelectorAll(".logHead");
+    links[0].classList.add("active");
+    blocks[0].classList.add("active");
+    for (let i = 0; i < links.length; i++) {
+        links[i].addEventListener("click", () => {
+            if (!links[i].classList.contains("active")) {
+                links[i].classList.add("active");
+                blocks[i].classList.add("active");
+                logHead[i].classList.add("active");
+            }
+            for (let j = 0; j < links.length; j++) {
+                if (i !== j) {
+                    if (links[j].classList.contains("active")) {
+                        links[j].classList.remove("active");
+                        blocks[j].classList.remove("active");
+                        logHead[j].classList.remove("active");
+                    }
+                }
+            }
+        })
+    }
+</script>

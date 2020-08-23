@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Market</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/main.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/bg/icon.jpg">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <a href="/">
+<!--                <img src="/img/bg/logo.svg" alt="logo">-->
+                NOTOBOOKS
+            </a>
+            <a href="/basket" class="cart">
+                <img src="/img/bg/cart.svg" alt="cart">
+                <div class="count"></div>
+            </a>
+        </header>
+        <nav class="navigation">
+            <h3>Меню</h3>
+            <ul class="navigation_list">
+                <li>
+                    <a href="/">Главная</a>
+                </li>
+                <li class="header__addPro">
+                    <a href="/addProduct">Добавить книгу</a>
+                </li>
+                <li class="user">
+                </li>
+            </ul>
+        </nav>
+        <main>
+            {{{body}}}
+        </main>
+        <footer></footer>
+    </div>
+</body>
+</html>

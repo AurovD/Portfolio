@@ -1,0 +1,287 @@
+<div class="headContainer">
+    <div class="box">
+        <h1 class="product-header">Название</h1>
+    </div>
+</div>
+<div class="bannerProd">
+    <div class="product-box price">
+        <div class="product-value">400</div>
+        <div class="buyProd">
+            <input type="number" min="1" value="1" class="count">
+            <button id="buyProduct" class="buyProduct">Купить продукт</button>
+        </div>
+    </div>
+    <div class="imgWrapper">
+        {{#if access}}
+            <form action="/api/product" method="POST" enctype="multipart/form-data">
+                <input type="file" class="change" id="changeImg" value=" " name="productImg">
+            </form>
+        {{/if}}
+        <div class="slideshow-container">
+            <!--        <div class="mySlides fade"> --}}-->
+            <a class="prev arrow">&#10094;</a>
+            <a class="next arrow">&#10095;</a>
+        </div>
+        <div class="dots" style="text-align:center">
+        </div>
+    </div>
+    <div class="product-box_ann">
+        <div>
+            <div class="product-head">Аннотация</div>
+            <div class="product-description">Описание книги</div>
+        </div>
+        <div class="tags">Теги</div>
+    </div>
+</div>
+<div class="product-container">
+    <div class="product-box">
+        <div class="product-head">Автор</div>
+        <div class="product-value">Пушкин</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Рейтинг</div>
+        <div class="product-value">%$@$$&</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Серия</div>
+        <div class="product-value">Поэмы</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Дата поступления</div>
+        <div class="product-value">23.07.1654</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Количество</div>
+        <div class="product-value">89</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Количество страниц</div>
+        <div class="product-value">367</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Штрих код</div>
+        <div class="product-value">1</div>
+    </div>
+    <div class="product-box">
+        <div class="product-head">Код товара</div>
+        <div class="product-value" id="code">1</div>
+    </div>
+</div>
+<div class="reviews-container">
+    <h2 class="product-head">Отзывы</h2>
+    <div class="reviews">
+
+    </div>
+    <h2>Добавить отзыв</h2>
+    <form action="/api/product/addReview" method="post" id="addReview">
+        <div class="rating">
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+        </div>
+        <div class="userName">
+            {{#if user}}
+            {{user}}
+            {{else}}
+            <input type="text" name="name" placeholder="Ваше имя">
+            {{/if}}
+        </div>
+        <textarea name="text" required></textarea>
+        <input type="submit" value="Отправить отзыв">
+    </form>
+    <!--    ★-->
+</div>
+<script>
+    let access = "{{access}}" == "true";
+    (async () => {
+        try {
+            const res = await fetch("/api/product/{{name}}");
+            const data = await res.json();
+            let pro = data.data;
+            let header = document.querySelector(".product-header");
+            let imgBox = document.querySelector(".slideshow-container");
+            let desc = document.querySelector(".product-description");
+            let tagBox = document.querySelector(".tags");
+            let params = Array.from(document.querySelectorAll(".product-value"));
+            let names = ["price", "author", "rating", "series", "releaseDate", "count", "pages", "barcode", "_id"];
+            let dots = document.querySelector(".dots");
+
+            header.innerHTML = pro.title;
+            if (pro.img.length === 0) {
+                img.src = "/img/products/default.png";
+            } else {
+                for (let i = 0; i < pro.img.length; i++) {
+                    let mySlides = document.createElement("div");
+                    mySlides.className = "mySlides fade";
+                    let dot = document.createElement("span");
+                    dot.classList.add("dot");
+                    dots.appendChild(dot);
+                    let image = document.createElement("img");
+                    image.src = pro.img[i];
+                    mySlides.appendChild(image);
+                    imgBox.appendChild(mySlides);
+                }
+            }
+            desc.innerText = pro.discription;
+            tagBox.innerText = pro.tags;
+            names.forEach((n, i) => {
+                if (n === "pages" || n === "author") {
+                    params[i].innerText = pro.parameters[n];
+                } else if (n === "rating") {
+                    let count = 0;
+                    let summ = 0;
+                    for (let i = 0; i < pro.reviews.length; i++) {
+                        summ += +pro.reviews[i].rating;
+                        count++;
+                    }
+
+                    if (count) {
+                        params[i].innerText = "";
+                        let stars = Math.round(summ / count);
+                        let rate = document.createElement("span");
+                        for (let j = 1; j <= stars; j++) {
+                            params[i].innerText += "★";
+                        }
+                        for (let j = stars + 1; j <= 5; j++) {
+                            params[i].innerText += "☆";
+                        }
+                    } else {
+                        params[i].innerText = "☆☆☆☆☆";
+                    }
+                } else if(n === "releaseDate"){
+                    let time = pro[n].split("T", 1);
+                    console.log("n", time);
+                    params[i].innerText = time;
+                }
+                else if(n === "price"){
+                    params[i].innerText = pro[n] + "руб";
+                }  else {
+                    params[i].innerText = pro[n];
+                }
+            });
+            let reviewsBox = document.querySelector(".reviews");
+            for (let i = 0; i < pro.reviews.length; i++) {
+                let container = document.createElement("div");
+                container.style.marginBottom = "20px";
+                container.classList.add("reviewCard");
+                let klyacsa = document.createElement("img");
+                klyacsa.setAttribute("src", "/img/bg/point.png");
+                container.appendChild(klyacsa);
+                let name = document.createElement("h3");
+                name.innerText = pro.reviews[i].name;
+                let rat = document.createElement("span");
+                for (let j = 1; j <= pro.reviews[i].rating; j++) {
+                    rat.innerText += "★";
+                }
+                for (let j = pro.reviews[i].rating + 1; j <= 5; j++) {
+                    rat.innerText += "☆";
+                }
+                let text = document.createElement("blockquote");
+                text.innerText = pro.reviews[i].text;
+                container.appendChild(name);
+                container.appendChild(rat);
+                container.appendChild(text);
+                let changReview = document.createElement("button");
+                changReview.innerText = "Править текст";
+                let delReview = document.createElement("button");
+                delReview.innerText = "Удалить отзыв";
+                if(access){
+                    container.appendChild(changReview);
+                    container.appendChild(delReview);
+                }
+                reviewsBox.appendChild(container);
+            }
+            let prev = document.querySelector(".prev");
+            let next = document.querySelector(".next");
+            let dotter = document.querySelectorAll(".dot");
+            let slideIndex = 1;
+            showSlides(slideIndex);
+            prev.addEventListener("click", (e) => {
+                showSlides(slideIndex += -1);
+            });
+
+            next.addEventListener("click", (e) => {
+                showSlides(slideIndex += 1);
+            });
+            for (let i = 0; i < dotter.length; i++) {
+                dotter[i].addEventListener("click", (e) => {
+                    showSlides(slideIndex += i + 1);
+                    console.log(dotter[i]);
+                });
+            }
+
+            function showSlides(n) {
+                let i;
+                let slides = document.querySelectorAll(".mySlides");
+                let dots = document.getElementsByClassName("dot");
+                console.log("slides", slides.length);
+                if (n > slides.length) { slideIndex = 1 }
+                if (n < 1) { slideIndex = slides.length }
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    })();
+    if(access) {
+        let edit = document.getElementById("changeImg");
+        edit.addEventListener("change", (e) => {
+            let code = document.getElementById("code").innerText;
+            edit.parentElement.action += "/" + code;
+            edit.parentElement.submit();
+        });
+    }
+    let btn = document.getElementById("buyProduct");
+    let cnt = btn.previousElementSibling;
+    let id = location.href.split("/");
+    id = id[id.length - 1];
+    let basketCnt = document.querySelector(".count");
+    btn.addEventListener("click", () => {
+        let order = JSON.parse(localStorage.getItem("order"));
+        if (!order) {
+            order = [];
+        }
+        let flag = true;
+        let fullCnt = 0;
+        for (let i = 0; i < order.length; i++) {
+            if (order[i].id === id) {
+                order[i].cnt = cnt.value;
+                flag = false;
+            }
+        }
+        if (flag) {
+            order.push({ id: id, cnt: cnt.value });
+        }
+        order.forEach(rec => {
+            fullCnt += +rec.cnt;
+        });
+        basketCnt.innerText = fullCnt;
+        console.log("order", order);
+        localStorage.setItem("order", JSON.stringify(order));
+        (async (order) => {
+            try {
+                let res = await fetch("/api/user/updateBasket", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(order)
+                });
+                let data = await res.json();
+            } catch (err) {
+                throw new Error(err);
+            }
+        })(order);
+    });
+</script>
+<script src="/js/reviews.js"></script>

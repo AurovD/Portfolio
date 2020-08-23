@@ -1,0 +1,112 @@
+<div class="main__bgIndex">
+    <div class="main_list">
+        <div class="catalogList des"><p class="box">Дизайн</p></div>
+    </div>
+</div>
+<script>
+    let main = document.querySelector(".main_list");
+    /*
+    * null || name
+    * ??? localStorage.clear()
+    *
+     */
+    let lastUser = JSON.parse(localStorage.getItem("user"));
+    if("{{user.user}}") {
+        let u = {
+            name: "{{user.name}}",
+            user: "{{user.user}}",
+            group: "{{user.group}}"
+        };
+        if(!lastUser || lastUser.user !== u.user) {
+            localStorage.setItem("user", JSON.stringify(u));
+            localStorage.removeItem("order");
+        }
+    } else {
+        if(lastUser) {
+            localStorage.removeItem("user");
+            localStorage.removeItem("order");
+        }
+    }
+    (async () => {
+        try {
+            const res = await fetch("/api/categories", {
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+            const data = await res.json();
+            console.log("index", data);
+            if (data.data) {
+                data.data.forEach(d => {
+                    console.log(d);
+                    let div = document.createElement("div");
+                    div.className = "catalogList";
+                    if(d === "Английская поэзия") {
+                        div.className += " engPoem";
+                    }
+                    if(d === "Детективы") {
+                        div.className += " detective";
+                    }
+                    if(d === "Зарубежная проза") {
+                        div.className += " foreign";
+                    }
+                    if(d === "Интернет технологии") {
+                        div.className += " web";
+                    }
+                    if(d === "Религия") {
+                        div.className += " rel";
+                    }
+                    if(d === "Сказки") {
+                        div.className += " scaz";
+                    }
+                    if(d === "Любовные романы") {
+                        div.className += " love";
+                    }
+                    if(d === "Русская поэзия") {
+                        div.className += " rus";
+                    }
+                    if(d === "Популярная психология") {
+                        div.className += " pop";
+                    }
+                    if(d === "Психиатрия и психология") {
+                        div.className += " psy";
+                    }
+                    if(d === "Фэнтези") {
+                        div.className += " fan";
+                    }
+                    div.addEventListener("click", () => {
+                        location.replace(`/categories/${d}`);
+                    });
+                    let box = document.createElement("p");
+                    box.className = "box";
+                    box.innerText = d;
+                    div.appendChild(box);
+                    main.appendChild(div);
+                })
+            }
+            sortList();
+        } catch (err) {
+            throw new Error(err)
+        }
+    })();
+
+    function sortList() {
+        let i, switching, p, shouldSwitch;
+        switching = true;
+        while (switching) {
+            switching = false;
+            p = main.getElementsByTagName("div");
+            for (i = 0; i < (p.length - 1); i++) {
+                shouldSwitch = false;
+                if (p[i].innerHTML.toLowerCase() > p[i + 1].innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                p[i].parentNode.insertBefore(p[i + 1], p[i]);
+                switching = true;
+            }
+        }
+    }
+</script>

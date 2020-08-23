@@ -1,0 +1,161 @@
+<div class="headContainer">
+    <div class="box">
+        <h1>Ваш заказ</h1>
+    </div>
+</div>
+<div class="basketContainer">
+    <div class="basketRow firstRow">
+        <span></span>
+        <!--        <img src="/img/products/default.png" alt="Миниатюра">-->
+        <span>Артикул</span>
+        <span>Наименование товара</span>
+        <span>Количество</span>
+        <span>Цена за позицию</span>
+        <span>Общая сумма</span>
+    </div>
+</div>
+<script>
+    let order = JSON.parse(localStorage.getItem("order"));
+    let container = document.querySelector(".basketContainer");
+    function setSum() {
+        let priceTags = document.querySelectorAll(".price");
+        let count = 0;
+        for (let i = 0; i < priceTags.length; i++) {
+            count += +priceTags[i].innerText;
+        }
+        document.querySelector(".finalSumm").innerText = "Итоговая сумма: " + count + " руб";
+    }
+
+    const buyBook = async (body, buyForm) => {
+        try {
+            const res = await fetch(buyForm.action, {
+                method: buyForm.method,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    // "Access-Control-Allow-Origin": "*",
+                    // "Access-Control-Max-Age": "800"
+                },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (data.message) {
+                buyForm.reset();
+                localStorage.removeItem("order");
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    };
+    function getOrder(btn) {
+        let address = document.createElement("div");
+        btn.setAttribute("disabled", true);
+        let frm = "";
+        frm += "<form class=\"buy form\" action=\"/api/user/order\" method=\"POST\">";
+        frm += "<input type=\"text\" required placeholder=\"Ваш индекс\">";
+        frm += "<input type=\"text\" required placeholder=\"Ваш город\">";
+        frm += "<input type=\"text\" name=\"address\" required placeholder=\"Ваш адрес\">";
+        frm += "<input type=\"submit\" value=\"Сделать заказ\">";
+        frm += "</form>";
+        // Robolassa/yandexmoney/paypass
+        address.innerHTML += frm;
+        container.appendChild(address);
+        let buyForm = document.forms[0];
+        buyForm.addEventListener("submit", (e) => {
+            console.log("click");
+            e.preventDefault();
+            let body = {};
+            let orders = localStorage.getItem("order");
+            if (buyForm.address) {
+                if (buyForm.address.value) {
+                    body.address = buyForm.address.value;
+                }
+            }
+            if (orders) {
+                body.orderbd = orders;
+            }
+            buyBook(body, buyForm);
+        });
+    }
+
+
+    if (order) {
+        (async (ord) => {
+            try {
+                let res = await fetch("/api/showBasket", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(ord)
+                });
+                let data = await res.json();
+                if (data.arr) {
+                    for (let i = 0; i < ord.length; i++) {
+                        let row = document.createElement("div");
+                        let btnUp = document.createElement("button");
+                        let btnDown = document.createElement("button");
+                        btnUp.innerText = "+";
+                        btnDown.innerText = "-";
+                        row.className = "basketRow";
+                        let str = "";
+                        str += `<img src="${data.arr[i].img[0]}" alt="${data.arr[i].title}"`;
+                        str += `<span>${data.arr[i]._id}</span>`;
+                        str += `<span>${data.arr[i].title}</span>`;
+                        str += `<div class="count">
+                                ${btnDown.outerHTML}<span>${ord[i].cnt}</span>${btnUp.outerHTML}
+                                </div>`;
+                        str += `<span>${data.arr[i].price}</span>`;
+                        str += `<span class="price">${ord[i].cnt * data.arr[i].price}</span>`;
+                        row.innerHTML = str;
+                        container.appendChild(row);
+                        let countArr = document.querySelectorAll(`.basketRow:nth-child(${i + 2}) > .count > *`);
+                        let up = countArr[2];
+                        let down = countArr[0];
+                        let number = countArr[1];
+                        let price = document.querySelector(`.basketRow:nth-child(${i + 2}) > .price`);
+                        up.addEventListener("click", () => {
+                            number.textContent = +number.textContent + 1;
+                            ord[i].cnt = +number.textContent;
+                            price.innerText = ord[i].cnt * data.arr[i].price;
+                            localStorage.setItem("order", JSON.stringify(ord));
+                            setSum();
+                            checkBasket();
+                        });
+                        down.addEventListener("click", () => {
+                            number.textContent = +number.textContent - 1;
+                            ord[i].cnt = +number.textContent;
+                            price.innerText = ord[i].cnt * data.arr[i].price;
+                            localStorage.setItem("order", JSON.stringify(ord));
+                            setSum();
+                            checkBasket();
+                        });
+                    }
+                    let summ = document.createElement("div");
+                    summ.className = "finalSumm";
+                    container.appendChild(summ);
+                    setSum();
+                    let btn = document.createElement("button");
+                    btn.innerText = "Купить";
+                    btn.classList.add("buyProduct");
+                    container.appendChild(btn);
+                    btn.addEventListener("click", () => {
+                        getOrder(btn);
+                    });
+                }
+            } catch (err) {
+                throw new Error(err);
+            }
+        })(order);
+    } else if(!order || order.length === 0) {
+        container.innerText = "Ваша корзина пуста";
+        container.style.textAlign = "center";
+        container.innerHTML += "<br><a href=\"/\">На главную</a>"
+    }
+</script>
+
+<!--
+покупатель - главная страница, каталог, корзина, логин, карточка товара, профиль,
+админ - добавление товара, редактирование карточки товара, база клиентов, редактирование базы блиентов, главная страница, каталог, корзина, логин, карточка товара, профиль, добавление дополнительных картинок,
+-->

@@ -1,0 +1,107 @@
+<div class="formWrapper">
+    <form action="/api/product/add" method="POST">
+        <fieldset>
+            <legend>Добавить продукт</legend>
+            <div class="addProd">
+                <label><p>Название книги</p>
+                    <input id="name" type="text" name="title" required placeholder="Название книги">
+                </label>
+                <label><p>Выберете жанр</p>
+                    <select name="category" required>
+                        <option value="Без категории">Выберете жанр</option>
+                        <option value="Детективы">Детективы</option>
+                        <option value="Интернет технологии">Интернет технологии</option>
+                        <option value="Фэнтези">Фентези</option>
+                        <option value="Русская проза">Русская проза</option>
+                        <option value="Популярная психология">Популярная психология</option>
+                        <option value="Психиатрия и психология">Психология и психиатрия</option>
+                        <option value="Любовные романы">Любовные романы</option>
+                        <option value="Зарубежная проза">Зарубежная проза</option>
+                        <option value="Религия">Религия</option>
+                        <option value="Русская поэзия">Русская поэзия</option>
+                        <option value="Английская поэзия">Английская поэзия</option>
+                        <option value="Сказки">Сказки</option>
+                    </select>
+                </label>
+                <label><p>Автор</p>
+                    <input type="text" name="par_author" required placeholder="Автор">
+                </label>
+                <label><p>Серия</p>
+                    <input type="text" name="series" placeholder="Серия">
+                </label>
+                <label><p>Атрибут товара</p>
+                    <input type="text" name="_id" required placeholder="Атрибут товара">
+                </label>
+                <label><p>Дата выпуска</p>
+                    <input type="date" name="releaseDate" required>
+                </label>
+                <label><p>Цена</p>
+                    <input type="number" name="price" required placeholder="Цена">
+                </label>
+                <label><p>Количество</p>
+                    <input type="number" name="count" required placeholder="Количество" min="0" value="0" step="1">
+                </label>
+                <label><p>Колисчество страниц</p>
+                    <input type="number" name="par_pages" required placeholder="Количество страниц">
+                </label>
+                <label><p>Код товара</p>
+                    <input type="number" name="barcode" required placeholder="Код товара" maxlength="15" minlength="10">
+                </label>
+                <label><p>Тэги</p>
+                    <input type="text" name="tags" placeholder="Теги">
+                </label>
+                <label><p>Описание</p>
+                    <textarea name="discription" placeholder="Описание товара"></textarea>
+                </label>
+                <label><p>Добавить изображение</p>
+                    <input type="file" name="img">
+                </label>
+                <button type="submit">Добавить продукт</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script>
+    let form = document.forms[0];
+    const addProduct = async (form, body) => {
+        try {
+            const res = await fetch(form.action, {
+                method: form.method,
+                headers: {
+                    "Accept": "application/json"
+                },
+                body: body
+            });
+            const data = await res.json();
+            if (data.message) {
+                form.reset();
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    };
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        let body = {};
+        let params = {};
+        for (let i = 0; i < form.elements.length; i++) {
+            const el = form.elements[i];
+            if (el.name && el.name !== "img") {
+                if (el.name.includes("par_")) {
+                    let str = el.name.slice(4);
+                    params[str] = el.value;
+                } else {
+                    body[el.name] = el.value;
+                }
+            }
+        }
+        body.parameters = params;
+        form .action += "/" + body._id;
+        let fd = new FormData();
+        fd.append("img", form.img.files[0]);
+        for (let k in body) {
+            fd.append(k, typeof body[k] === "string" ? body[k] : JSON.stringify(body[k]));
+        }
+        addProduct(form, fd);
+    });
+</script>

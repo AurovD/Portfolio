@@ -1,0 +1,70 @@
+<div class="headContainer">
+    <div class="box">
+        <h1>{{name}}</h1>
+    </div>
+</div>
+<div class="main_list">
+</div>
+<script>
+    (async () => {
+        try {
+            const res = await fetch("/api/categories/{{name}}", {
+                method: "get",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+            let headContainer = document.querySelector(".headContainer");
+            let card = document.querySelector(".card");
+            if ("{{name}}" === "Английская поэзия") {
+                headContainer.className += " engHeader";
+            }
+            if ("{{name}}" === "Любовные романы") {
+                headContainer.className += " loveHeader";
+            }
+            if ("{{name}}" === "Зарубежная проза") {
+                headContainer.className += " foreignHeader";
+            }
+            if ("{{name}}" === "Популярная психология") {
+                headContainer.className += " popHeader";
+            }
+            if ("{{name}}" === "Интернет технологии") {
+                headContainer.className += " interHeader";
+            }
+            const data = await res.json();
+            let list = document.querySelector(".main_list");
+            console.log(data.data);
+            data.data.forEach(d => {
+                let bookCard = document.createElement("div");
+                let plashka = document.createElement("div");
+                let card = document.createElement("div");
+                bookCard.className = "bookCard";
+                plashka.className = "plashka";
+                card.className = "card";
+                let img = document.createElement("img");
+                if (d.img.length === 0) {
+                    img.setAttribute("src", "/img/products/default.png");
+                } else {
+                    img.setAttribute("src", `${d.img[0]}`);
+                }
+                bookCard.addEventListener("click", () => {
+                        location.replace(`/categories/{{name}}/${d._id}`);
+                });
+                {{!-- img.style.width = "150px"; --}}
+                card.appendChild(img);
+                let item = document.createElement("h4");
+                {{!-- item.innerHTML = `${d.title}<br>${d.price}`; --}}
+                item.innerHTML = `${d.price} ₽`;
+                let tit= document.createElement("h3");
+                tit.innerHTML = `${d.title}`;
+                card.appendChild(tit);
+                bookCard.appendChild(card);
+                plashka.appendChild(item);
+                bookCard.appendChild(plashka);
+                list.appendChild(bookCard);
+            });
+        } catch (err) {
+            throw new Error(err);
+        }
+    })();
+</script>
