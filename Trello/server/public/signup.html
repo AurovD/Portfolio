@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+</head>
+<body>
+    <h1>Регистрация</h1>
+    <form action="http://localhost:8001/api/users/create" method="POST" enctype="application/json">
+        <input type="text" name="login" placeholder="login">
+        <input type="text" name="name" placeholder="name">
+        <input type="password" name="pwd" placeholder="password">
+        <input type="submit" placeholder="Отправить">
+    </form>
+    <script>
+        let form = document.forms[0];
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            sendForm({
+                login: form.login.value,
+                name: form.name.value,
+                pwd: form.pwd.value,
+            })
+        })
+
+        async function sendFOrm(body) {
+            let res = await fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            let data = await  res.json();
+            if(data.msg == "ok") {
+                location.replace("/user.html");
+            }
+        }
+    </script>
+</body>
+</html>
